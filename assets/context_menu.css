@@ -1,0 +1,93 @@
+#plots-context-menu {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    border: 1px solid #d3d3d3;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#plots-context-menu.active {
+    display: block;
+}
+
+#plots-context-menu ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+#plots-context-menu ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#plots-context-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+
+
+
+#neuron-context-menu {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    border: 1px solid #d3d3d3;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#neuron-context-menu.active {
+    display: block;
+}
+
+#neuron-context-menu ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+#neuron-context-menu ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#neuron-context-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+
+#layer-context-menu {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    border: 1px solid #d3d3d3;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#layer-context-menu.active {
+    display: block;
+}
+
+#layer-context-menu ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+#layer-context-menu ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#layer-context-menu ul li:hover {
+    background-color: #f0f0f0;
+}
