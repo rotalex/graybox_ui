@@ -34,6 +34,7 @@ from model_architecture_tab import get_layer_context_menu
 from plots_div import get_plots_div
 from data_management_tab import get_data_samples_management_tab
 from data_management_tab import get_checkpoint_loading_context_menu
+from data_management_tab import tensor_to_image
 
 
 from flask.logging import default_handler
@@ -77,7 +78,6 @@ if __name__ == '__main__':
 
     training_thread = Thread(target=start_training_thread)
     training_thread.start()
-
 
     COLORS = defaultdict(
         lambda: f"rgb({r.randint(0,128)},{r.randint(0,128)},{r.randint(0,128)})"
@@ -128,7 +128,6 @@ if __name__ == '__main__':
 
         return exp.train_loader.dataset.as_records(), False
 
-
     @app.callback(
         Output('train-tbl', 'data'),
         Input('data-table-refresh', 'n_intervals'),
@@ -136,7 +135,6 @@ if __name__ == '__main__':
     def update_data_table(n_intervals):
         del n_intervals
         return exp.get_train_records()
-
 
     @app.callback(
         Output('data-management-header', 'children', allow_duplicate=True),
@@ -148,19 +146,18 @@ if __name__ == '__main__':
         num_samples = len(exp.train_loader.dataset)
         return f'Data samples management #{num_samples}'
 
-
     @app.callback(
         Output('model-representation', 'children'),
+        Input('model-representation', 'children'),
         Input('refreshes', 'n_intervals'),
         State('checkboxes', 'value')
     )
-    def update_architecture_stats(_, checklist):
-        # print("[callbacks] update_architecture_stats")
-        return [
-            get_layer_representation(layer_idx, layer, checklist)
-            for layer_idx, layer in enumerate(exp.model.layers)
-        ]
-
+    def update_architecture_stats(previous_children, _, checklist):
+        children = []
+        for layer_idx, layer in enumerate(exp.model.layers):
+            children.append(
+                get_layer_representation(layer_idx, layer, checklist))
+        return children
 
     @app.callback(
         Output("graphs-row-div", "children"),
@@ -181,7 +178,6 @@ if __name__ == '__main__':
             ))
         return graph_divs
 
-
     @app.callback(
         Output('resume-pause-train-btn', 'children', allow_duplicate=True),
         Input('resume-pause-train-btn', 'n_clicks'),
@@ -198,7 +194,6 @@ if __name__ == '__main__':
         exp.toggle_training_status()
         # print("AFTER  ", exp)
         return new_children
-
 
     @app.callback(
         Output('resume-pause-train-btn', 'children', allow_duplicate=True),
@@ -225,7 +220,6 @@ if __name__ == '__main__':
         del n_intervals
         print("[UI]update_training_steps_input ", exp)
         return exp.get_training_steps_to_do()
-
 
     @app.callback(
         Output({'type': "graph", "index": MATCH}, "figure", allow_duplicate=True),
@@ -368,8 +362,8 @@ if __name__ == '__main__':
         Input("layer-re-order", "n_clicks"),
         State('last-right-clicked-id', 'children'),
     )
-    def reordering_neurons(_, children):
-        print("redordering_neurons : ", children)
+    def reordering_neurons(n_clicks, children):
+        print("redordering_neurons : ", n_clicks, children)
         layer_id = int(children.split("-")[-1])
         print(f"[UI] Re-Order layer {layer_id}")
         _logger.info(f"[UI] Re-Order layer {layer_id}")
@@ -482,6 +476,28 @@ if __name__ == '__main__':
 
         layer.set_per_neuron_learning_rate(
             neuron_ids={neuron_idx}, lr=1.0 - curr_lr)
+    
+    @app.callback(
+        Output('image-container', 'children'),
+        Input('train-tbl', 'selected_rows'),
+        State('train-tbl', 'data')
+    )
+    def display_image(selected_rows, data):
+        if selected_rows is None or len(selected_rows) == 0:
+            return no_update
+        
+        # Get the selected row's data
+        selected_row_index = selected_rows[0]
+        
+        row = data[selected_row_index]
+        image, id, label = exp.train_loader.dataset[selected_row_index]
+        print("Data-Table row selected ", selected_row_index, row, image.shape, image)
+        # encoded_image = tensor_to_image(image)
+        image = th.rand(3, 28, 28)
+        return html.Img(
+            src=f'data:image/png;base64,{tensor_to_image(image)}',
+            style={'width': '15%', 'height': 'auto'}
+        )
 
     @app.callback(
         Input("experiment_name", "value"),
@@ -512,14 +528,14 @@ if __name__ == '__main__':
         exp.set_learning_rate(lr)
         return no_update
 
-    @app.callback(
-        Output("learning_rate", "value", allow_duplicate=True),
-        Input("heartbeat", "n_intervals"),
-        prevent_initial_call=True,
-    )
-    def update_learning_rate_input(n_intervals):
-        del n_intervals
-        return exp.learning_rate
+    # @app.callback(
+    #     Output("learning_rate", "value", allow_duplicate=True),
+    #     Input("heartbeat", "n_intervals"),
+    #     prevent_initial_call=True,
+    # )
+    # def update_learning_rate_input(n_intervals):
+    #     del n_intervals
+    #     return exp.learning_rate
 
 
     @app.callback(
@@ -531,14 +547,14 @@ if __name__ == '__main__':
         exp.set_batch_size(batch_size)
         return no_update
 
-    @app.callback(
-        Output("batch_size", "value", allow_duplicate=True),
-        Input("heartbeat", "n_intervals"),
-        prevent_initial_call=True,
-    )
-    def update_training_steps_input(n_intervals):
-        del n_intervals
-        return exp.batch_size
+    # @app.callback(
+    #     Output("batch_size", "value", allow_duplicate=True),
+    #     Input("heartbeat", "n_intervals"),
+    #     prevent_initial_call=True,
+    # )
+    # def update_training_steps_input(n_intervals):
+    #     del n_intervals
+    #     return exp.batch_size
 
 
     @app.callback(
@@ -548,14 +564,14 @@ if __name__ == '__main__':
         exp.eval_full_to_train_steps_ratio = eval_freq
         return no_update
 
-    @app.callback(
-        Output("eval_freq", "value", allow_duplicate=True),
-        Input("heartbeat", "n_intervals"),
-        prevent_initial_call=True,
-    )
-    def update_training_steps_input(n_intervals):
-        del n_intervals
-        return exp.eval_full_to_train_steps_ratio
+    # @app.callback(
+    #     Output("eval_freq", "value", allow_duplicate=True),
+    #     Input("heartbeat", "n_intervals"),
+    #     prevent_initial_call=True,
+    # )
+    # def update_training_steps_input(n_intervals):
+    #     del n_intervals
+    #     return exp.eval_full_to_train_steps_ratio
 
     @app.callback(
         Input("ckpt_freq", "value"),

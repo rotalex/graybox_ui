@@ -98,7 +98,6 @@ def get_neuron_representation_heading(checklist_values):
             'margin': '2px',
             'borderRadius': '10px',
             'fontSize': '12px',
-            
         }
     )
 

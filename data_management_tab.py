@@ -6,6 +6,35 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 
+
+import numpy as np
+import torch as th
+import io
+import base64
+from matplotlib import pyplot as plt
+from PIL import Image
+
+
+def tensor_to_image(tensor):
+    # Convert tensor to numpy array and transpose to (H, W, C) format
+    np_img = tensor.numpy().transpose(1, 2, 0)
+    
+    # Ensure the values are in the range [0, 255]
+    np_img = (np_img * 255).astype(np.uint8)
+    
+    # Create a figure and plot the tensor as an image
+    img = Image.fromarray(np_img)
+    buf = io.BytesIO()
+    img.save(buf, format='png')
+    buf.seek(0)
+
+    # Encode the image to base64
+    img_str = base64.b64encode(buf.getvalue()).decode('utf-8')
+    print("image_str: ", img_str[:32])
+    return img_str
+
+
+
 def get_data_samples_management_tab(exp: "Experiment"):
     num_samples = len(exp.train_loader.dataset)
     columns = [
@@ -48,6 +77,7 @@ def get_data_samples_management_tab(exp: "Experiment"):
                 filter_action="native",
                 sort_action="native",
                 page_action="native",
+                row_selectable='single',
                 virtualization=True,
                 page_size=500,
                 style_table={
@@ -62,6 +92,13 @@ def get_data_samples_management_tab(exp: "Experiment"):
                     'textAlign': 'left',
                     'minWidth': '10vw',
                     'maxWidth': '20vw'}
+            ),
+            html.Div(
+                id='image-container',
+                children=html.Img(
+                    src=f'data:image/png;base64,{tensor_to_image(th.rand(3, 28, 28))}',
+                    style={'width': '80%', 'height': 'auto'}
+                    )
             ),
         ]),
     ])
