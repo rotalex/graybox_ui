@@ -136,5 +136,5 @@ function checkAndExecute() {
         setTimeout(checkAndExecute, 500); // Check every 500 ms
     }
 }
-document.addEventListener('DOMContentLoaded', checkAndExecute);
+// document.addEventListener('DOMContentLoaded', checkAndExecute);
 
