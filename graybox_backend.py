@@ -15,12 +15,7 @@ from collections import defaultdict
 
 from scope_timer import ScopeTimer
 
-# from fashion_mnist_exp import get_exp
 from tiny_image_net_exp import get_exp
-
-
-# import multiprocessing
-# multiprocessing.set_start_method("forkserver")
 
 experiment = get_exp()
 

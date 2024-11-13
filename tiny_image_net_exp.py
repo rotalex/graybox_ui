@@ -118,16 +118,11 @@ class NanoModel(NetworkWithOps):
         x = F.relu(x)
         x = self.mpool5(x)
 
-        # print("pre flattening :", x.shape)
-
         x = x.view(x.size(0), -1)
         x = self.fc1(x, intermediary=intermediary)
         x = F.relu(x)
-        # x = self.bnorm3(x)
-        # x = self.drop1(x)
         x = self.fc2(x, intermediary=intermediary)
         x = F.relu(x)
-        # x = self.bnorm4(x)
         output = self.fc3(x, skip_register=True, intermediary=None)
 
         one_hot = F.one_hot(
@@ -168,13 +163,7 @@ data_transforms = {
 image_datasets = {
     x: ds.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ["train", "val", "test"]
 }
-# dataloaders = {
-#     x: ds.DataLoader(image_datasets[x], batch_size=500, shuffle=True, num_workers=num_workers[x])
-#     for x in ["train", "val", "test"]
-# }
-
 device = th.device("cuda:0")
-# device = th.device("cpu")
 
 
 def get_exp():
@@ -193,10 +182,6 @@ def get_exp():
 
     def stateful_difference_monitor_callback():
         exp.display_stats()
-
-    # exp.register_train_loop_callback(stateful_difference_monitor_callback)
-
-    # exp.load(checkpoint_id=24)
 
     return exp
 
