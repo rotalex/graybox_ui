@@ -31,36 +31,36 @@ class NanoModel(NetworkWithOps):
         self.tracking_mode = TrackingMode.DISABLED
 
         self.layer1 = Conv2dWithNeuronOps(
-            in_channels=3, out_channels=8, kernel_size=3, padding=1)
-        self.bnorm1 = BatchNorm2dWithNeuronOps(8)
+            in_channels=3, out_channels=20, kernel_size=3, padding=1)
+        self.bnorm1 = BatchNorm2dWithNeuronOps(20)
         self.mpool1 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.layer2 = Conv2dWithNeuronOps(
-            in_channels=8, out_channels=8, kernel_size=3)
-        self.bnorm2 = BatchNorm2dWithNeuronOps(8)
+            in_channels=20, out_channels=20, kernel_size=3)
+        self.bnorm2 = BatchNorm2dWithNeuronOps(20)
         self.mpool2 = nn.MaxPool2d(2)
 
         self.layer3 = Conv2dWithNeuronOps(
-            in_channels=8, out_channels=8, kernel_size=3)
-        self.bnorm3 = BatchNorm2dWithNeuronOps(8)
+            in_channels=20, out_channels=20, kernel_size=3)
+        self.bnorm3 = BatchNorm2dWithNeuronOps(20)
         self.mpool3 = nn.MaxPool2d(2)
 
         self.layer4 = Conv2dWithNeuronOps(
-            in_channels=8, out_channels=8, kernel_size=3)
-        self.bnorm4 = BatchNorm2dWithNeuronOps(8)
+            in_channels=20, out_channels=20, kernel_size=3)
+        self.bnorm4 = BatchNorm2dWithNeuronOps(20)
         self.mpool4 = nn.MaxPool2d(2)
 
         self.layer5 = Conv2dWithNeuronOps(
-            in_channels=8, out_channels=8, kernel_size=3)
-        self.bnorm5 = BatchNorm2dWithNeuronOps(8)
+            in_channels=20, out_channels=20, kernel_size=3)
+        self.bnorm5 = BatchNorm2dWithNeuronOps(20)
         self.mpool5 = nn.MaxPool2d(2)
 
-        self.fc1 = LinearWithNeuronOps(in_features=8*5*5, out_features=10)
+        self.fc1 = LinearWithNeuronOps(in_features=20*5*5, out_features=20)
         # self.bnorm3 = BatchNorm2dWithNeuronOps(10)
         self.drop1 = nn.Dropout(0.25)
-        self.fc2 = LinearWithNeuronOps(in_features=10, out_features=10)
+        self.fc2 = LinearWithNeuronOps(in_features=20, out_features=20)
         # self.bnorm4 = BatchNorm2dWithNeuronOps(120)
-        self.fc3 = LinearWithNeuronOps(in_features=10, out_features=200)
+        self.fc3 = LinearWithNeuronOps(in_features=20, out_features=200)
         self.softmax = nn.Softmax(dim=1)
 
     def children(self):

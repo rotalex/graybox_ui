@@ -493,7 +493,6 @@ class UIState:
 
         except Exception as e:
             print("Error processing sample: {}".format(e))
-            import pdb; pdb.set_trace()
 
     def get_layer_df_row_by_id(self, layer_id: int):
         with self.lock:
@@ -1408,7 +1407,9 @@ def main():
 
     get_initial_state_request = pb2.TrainerCommand(
         get_hyper_parameters=True,
-        get_interactive_layers=True,)
+        get_interactive_layers=True,
+        get_data_records="train",
+    )
 
     print("[UI] About Fetching initial state.")
     initial_state_response = stub.ExperimentCommand(get_initial_state_request)
