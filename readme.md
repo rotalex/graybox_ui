@@ -172,11 +172,11 @@ Dash is running on http://127.0.0.1:8050/
 ....
 ```
 
-### Image 1
+### Initial page
 ![Screenshot of Image 1](screen-shots/hyper_and_plots.png)
 
-### Image 2
+### Plots and weights
 ![Screenshot of Image 2](screen-shots/plots_and_weights.png)
 
-### Image 3
+### Data manipulation
 ![Screenshot of Image 3](screen-shots/data_manipulation.png)
