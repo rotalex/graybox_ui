@@ -9,6 +9,8 @@ service ExperimentService {
   rpc ManipulateWeights(WeightsOperationRequest) returns (WeightsOperationResponse);
 
   rpc GetSample(SampleRequest) returns (SampleRequestResponse);
+
+  rpc GetWeights(WeigthsRequest) returns (WeightsResponse);
 }
 
 
@@ -182,4 +184,29 @@ message SampleRequestResponse {
   optional string error_message = 5;
 }
 
+message WeigthsRequest{
+  NeuronId neuron_id = 1;
+  bool with_bias = 2;
+  bool with_learning_rate = 3;
+  bool with_incoming_learning_rates = 4;
+  bool include_gradients = 5;
+}
+
+message WeightsResponse{
+  NeuronId neuron_id = 1;
+  optional string layer_name = 2;
+  optional string layer_type = 3;
+
+  int32 incoming = 4;
+  int32 outgoing = 5;
+  optional int32 kernel_size = 6;
+
+  repeated float weights = 7;
+  optional float bias = 8;
+  optional float learning_rate = 9;
+  map<int32, float> incoming_learning_rates = 10;
+
+  bool success = 11;
+  optional string error_message = 12;
+}
 
